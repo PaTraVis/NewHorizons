@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using BEPUphysics.Entities;
 
@@ -39,12 +40,9 @@ namespace BEPUMono
 	        //Collect any bone transformations in the model itself.
             //The default cube model doesn't have any, but this allows the EntityModel to work with more complicated shapes.
             boneTransforms = new Matrix[model.Bones.Count];
-            foreach (ModelMesh mesh in model.Meshes)
+            foreach (var effect in model.Meshes.SelectMany(mesh => mesh.Effects).Cast<BasicEffect>())
             {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-                }
+                effect.EnableDefaultLighting();
             }
         }
 
@@ -55,14 +53,13 @@ namespace BEPUMono
             //and translation of the entity combined.
             //There are a variety of properties available in the entity, try looking around
             //in the list to familiarize yourself with it.
-            GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
             var worldMatrix = Transform * MathConverter.Convert(entity.WorldTransform);
 
 
             model.CopyAbsoluteBoneTransformsTo(boneTransforms);
             foreach (ModelMesh mesh in model.Meshes)
             {
-                foreach (BasicEffect effect in mesh.Effects)
+                foreach (var effect in mesh.Effects.Cast<BasicEffect>())
                 {
                     effect.World = boneTransforms[mesh.ParentBone.Index] * worldMatrix;
                     effect.View = MathConverter.Convert(Player.Camera.ViewMatrix);
@@ -75,25 +72,23 @@ namespace BEPUMono
                     effect.SpecularPower = 2.0f;
 
                     if (texture != null)
-	                {
-		                effect.Texture = texture;
-		                effect.TextureEnabled = true;
-	                }
-	                else
+                    {
+                        effect.Texture = texture;
+                        effect.TextureEnabled = true;
+                    }
+                    else
                     {
 
-	                    effect.DirectionalLight0.DiffuseColor = Color.White.ToVector3();// a red light
+                        effect.DirectionalLight0.DiffuseColor = Color.White.ToVector3();// a red light
                         effect.DirectionalLight0.Direction = new Vector3(1, 1, 0);  // coming along the x-axis
-	                    effect.DirectionalLight0.SpecularColor = Color.Yellow.ToVector3(); // with green highlights
+                        effect.DirectionalLight0.SpecularColor = Color.Yellow.ToVector3(); // with green highlights
                         effect.AmbientLightColor = new Vector3(0.2f, 0.2f, 0.2f);
                         effect.EmissiveColor = new Vector3(1, 0, 0);
                     }
-
-                    
                 }
                 mesh.Draw();
             }
-            base.Draw(gameTime);
+	        base.Draw(gameTime);
         }
     }
 }

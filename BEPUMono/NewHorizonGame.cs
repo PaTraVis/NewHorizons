@@ -3,6 +3,7 @@ using BEPUMono.InputListeners;
 using BEPUMono.UI;
 using BEPUMono.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BEPUMono
@@ -13,6 +14,8 @@ namespace BEPUMono
     public class NewHorizonGame : Game
     {
         public bool ShowDebugInfo { get; set; }
+        public bool ShowWireframe { get; set; } = true;
+
 	    public InputListenerManager InputManager { get; private set; }
         public KeyboardListener KeyboardListener { get; private set; }
         public MouseListener MouseListener { get; private set; }
@@ -59,7 +62,7 @@ namespace BEPUMono
 		    MouseListener = InputManager.AddListener<MouseListener>();
             FPS = new FramesPerSecondCounter();
 
-            KeyboardListener.KeyReleased += KeyboardListenerOnKeyReleased;
+            KeyboardListener.KeyPressed += KeyboardListenerOnKeyReleased;
             MouseListener.MouseMoved += MouseListenerOnMouseMoved;
 
 		    ShowDebugInfo = false;
@@ -79,6 +82,12 @@ namespace BEPUMono
 		    {
 			    ShowDebugInfo = !ShowDebugInfo;
 		    }
+
+	        if (keyboardEventArgs.Key == Keys.F4)
+	        {
+	            ShowWireframe = !ShowWireframe;
+	        }
+
 		    if (keyboardEventArgs.Key == Keys.Escape)
 		    {
 			    Exit();
@@ -127,8 +136,22 @@ namespace BEPUMono
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             ActiveScreen?.Draw(gameTime);
+	        if (ShowWireframe)
+	        {
+	            var orginalState = GraphicsDevice.RasterizerState;
+	            var rasterizerState = new RasterizerState {FillMode = FillMode.WireFrame};
+	            GraphicsDevice.RasterizerState = rasterizerState;
 
+	            base.Draw(gameTime);
+
+	            GraphicsDevice.RasterizerState = orginalState;
+	        }
+	        else
+	        {
             base.Draw(gameTime);
+            }
+
+
         }
     }
 
