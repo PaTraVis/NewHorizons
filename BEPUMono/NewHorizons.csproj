@@ -69,6 +69,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenAwareAssetManager.cs" />
+    <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="UI\BasicUserHUD.cs" />
     <Compile Include="Utils\FramesPerSecondCounter.cs" />
   </ItemGroup>

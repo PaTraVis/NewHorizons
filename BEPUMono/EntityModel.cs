@@ -64,12 +64,12 @@ namespace BEPUMono
                     effect.World = boneTransforms[mesh.ParentBone.Index] * worldMatrix;
                     effect.View = MathConverter.Convert(Player.Camera.ViewMatrix);
                     effect.Projection = MathConverter.Convert(Player.Camera.ProjectionMatrix);
-                    effect.LightingEnabled = false; // turn on the lighting subsystem.
+                    effect.LightingEnabled = true; // turn on the lighting subsystem.
 
                     //effect.Alpha = 1.0f;
                     //effect.DiffuseColor = Color.White.ToVector3();
-                    effect.SpecularColor = Color.White.ToVector3();
-                    effect.SpecularPower = 2.0f;
+                   // effect.SpecularColor = Color.White.ToVector3();
+                    //effect.SpecularPower = 2.0f;
 
                     if (texture != null)
                     {
@@ -82,6 +82,8 @@ namespace BEPUMono
                         effect.DirectionalLight0.DiffuseColor = Color.White.ToVector3();// a red light
                         effect.DirectionalLight0.Direction = new Vector3(1, 1, 0);  // coming along the x-axis
                         effect.DirectionalLight0.SpecularColor = Color.Yellow.ToVector3(); // with green highlights
+                        effect.DirectionalLight0.Enabled = true;
+                        
                         effect.AmbientLightColor = new Vector3(0.2f, 0.2f, 0.2f);
                         effect.EmissiveColor = new Vector3(1, 0, 0);
                     }
